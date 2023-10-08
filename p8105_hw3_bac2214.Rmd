@@ -4,3 +4,28 @@ author: "Brianna Carnagie"
 date: "2023-10-08"
 output: github_document
 ---
+
+```{r}
+library(p8105.datasets)
+data("instacart") 
+
+library(tidyverse)
+
+# dataset exploration
+instacart |> select(order_id, user_id, order_number, everything())
+
+user_112108 = instacart |>  filter(user_id == 112108)
+
+user_17989 = instacart |>  filter(user_id == 17989) 
+
+user_17989_dept_frq = user_17989 |> count(department_id)
+```
+
+The dataset is a tibble that has `r nrow(instacart)` observations and `r ncol(instacart)` variables. A few key variables in the dataset include an 'order_id', 'user_id', which are the same, indicating that these are variables specific to each instacart customer. Other important variables include 'product_id' and 'product_name', which give more details about the products purchased in their instacart order.
+
+A user with user_id 112108 placed an order (with order_id = 1) on the fourth day of the week (order_dow = 4) at 10 am (order_hour_of_day = 10). 9 days have passed since their previous order. In this order, they added "Bulgarian Yogurt" to their cart first (add_to_cart_order = 1), which is found in the "yogurt" aisle of the "dairy eggs" department. This was their fourth instacart order (order_number = 4).
+
+A user with user_id 17989 had `r nrow(user_17989)` items in their order, with the most popular department they shopped in being the department_id 4, which corresponds to fresh vegetables.
+
+
+
