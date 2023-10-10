@@ -70,9 +70,8 @@ There are `r aisle_count` total aisles. The top 3 aisles are in the table below!
 
 > Make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered. Arrange aisles sensibly, and organize your plot so others can read it.
 
-```{r}
-
-aisle_freq_plot = instacart |> 
+```{r, message=FALSE}
+instacart |> 
   group_by(aisle_id, department) |> 
   summarize(n_obs = n()) |> 
   filter(n_obs > 10000)|> 
