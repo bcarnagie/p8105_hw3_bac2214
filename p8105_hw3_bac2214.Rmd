@@ -84,23 +84,17 @@ instacart |>
 
 > Make a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”. Include the number of times each item is ordered in your table.
 
-```{r}
-popular_items_tbl = 
+```{r, message=FALSE}
   instacart |> janitor::clean_names() |> 
   select(aisle, product_name) |> 
   group_by(aisle,product_name) |> 
-  summarize(n_obs = n()) |> filter(aisle %in% c("baking ingredients","dog food care", "packaged vegetables fruits")) |> arrange(desc(n_obs))
- 
-
-
-
-column_freq= instacart %>%
-  count(aisle, sort = TRUE)
- 
+  summarize(n_obs = n()) |> filter(aisle %in% c("baking ingredients","dog food care", "packaged vegetables fruits")) |> arrange(desc(n_obs)) |> slice_head(n = 3) |>  knitr::kable(digits = 4)
 ```
 
-
-
 > Make a table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week; format this table for human readers (i.e. produce a 2 x 7 table).
+
+```{r}
+
+```
 
 
