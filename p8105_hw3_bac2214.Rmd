@@ -72,14 +72,13 @@ There are `r aisle_count` total aisles. The top 3 aisles are in the table below!
 
 ```{r, message=FALSE}
 instacart |> 
-  group_by(aisle_id, department) |> 
-  summarize(n_obs = n()) |> 
-  filter(n_obs > 10000)|> 
-  ggplot( aes(x = as.factor(aisle_id), y = n_obs)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Number of Items Ordered by Aisle & Department", x = "Aisle Number", y = "Number of Items") +
-  theme_minimal() +
-  facet_wrap(~ department, scales = "free_x") 
+  count(aisle) |> 
+  filter(n > 10000) |> 
+  mutate(aisle = fct_reorder(aisle, n)) |> 
+  ggplot(aes(x = aisle, y = n)) + 
+  geom_point() + 
+  labs(title = "Number of items ordered in each aisle") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))
 ```
 
 > Make a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”. Include the number of times each item is ordered in your table.
@@ -103,6 +102,13 @@ instacart |> janitor::clean_names() |>
     names_from = order_dow, 
     values_from = mean_hour) |>
   knitr::kable(digits = 2)
+```
+
+### Question 2
+
+#### Loading the data
+```{r}
+data("brfss_smart2010")
 ```
 
 
