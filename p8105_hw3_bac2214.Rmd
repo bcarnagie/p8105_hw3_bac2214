@@ -180,5 +180,44 @@ ggplot(two_panel_df, aes(x = response, y = crude_prevalence_percent)) +
        y = "Crude Prevalence Percent") 
 ```
 
+### Question 3
+
+#### Loading the data
+```{r}
+nhanes_accel = read_csv("data/nhanes_accel.csv")
+nhanes_covar = read_csv("data/nhanes_covar.csv", skip = 4)
+```
+
+Load, tidy, merge, and otherwise organize the data sets. Your final dataset should include all originally observed variables; exclude participants less than 21 years of age, and those with missing demographic data; and encode data with reasonable variable classes (i.e. not numeric, and using factors with the ordering of tables and plots in mind).
+
+#### Cleaning and merging the datasets 
+```{r}
+nhanes_accel_tidy = nhanes_accel |> 
+  janitor::clean_names() |> 
+  pivot_longer(
+     min1:min1440,
+    names_to = "minute",
+    names_prefix = "min",
+    values_to = "mims") 
+ 
+nhanes_covar_tidy = nhanes_covar |> 
+  janitor::clean_names() |> 
+  mutate(
+    sex = case_when(
+      sex == 1 ~ "male",
+      sex == 2 ~ "female"
+    ),
+    education = case_when(
+      education == 1 ~ "Less than high school",
+      education == 2 ~ "High school equivalent",
+      education == 3 ~ "More than high school"))
+
+nhanes_merge_df = full_join(nhanes_accel_tidy, nhanes_covar_tidy) |> 
+  janitor::clean_names() |> 
+  filter(
+    age >= 21, 
+    if_all(c(seqn, minute, mims, sex, age, bmi, education), ~ !is.na(.))
+  )
 
 
+```
