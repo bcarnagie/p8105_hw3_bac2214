@@ -212,12 +212,50 @@ nhanes_covar_tidy = nhanes_covar |>
       education == 2 ~ "High school equivalent",
       education == 3 ~ "More than high school"))
 
-nhanes_merge_df = full_join(nhanes_accel_tidy, nhanes_covar_tidy) |> 
+nhanes_merge_df = full_join(nhanes_accel_tidy, nhanes_covar_tidy, by = "seqn") |> 
   janitor::clean_names() |> 
   filter(
     age >= 21, 
     if_all(c(seqn, minute, mims, sex, age, bmi, education), ~ !is.na(.))
-  )
+  ) |> 
+  mutate(education = factor(education, levels = c("Less than high school", "High school equivalent", "More than high school")))
+```
 
+
+> Produce a reader-friendly table for the number of men and women in each education category, and create a visualization of the age distributions for men and women in each education category. Comment on these items.
+
+```{r}
+
+gender_df = nhanes_merge_df |> 
+  group_by(sex, education) |> 
+  summarize(n_obs = n_distinct(seqn)) 
+
+gender_tbl = gender_df |>  
+  knitr::kable(digits = 4)
+
+
+gender_plot = ggplot(gender_df, aes(x = education, y = n_obs)) +
+  geom_bar(stat = "identity", position = "dodge") + 
+  labs(title = "Number of Participants by Education Level",
+       x = "Education Level",
+       y = "Number of Participants") +
+  facet_wrap(~sex, ncol = 2)
+```
+* Based on the data, more females in the study completed more then high school compared to males.
+* However, more males completed the equivalent of high school compared to females.
+
+
+> Traditional analyses of accelerometer data focus on the total activity over the day. Using your tidied dataset, aggregate across minutes to create a total activity variable for each participant. Plot these total activities (y-axis) against age (x-axis); your plot should compare men to women and have separate panels for each education level. Include a trend line or a smooth to illustrate differences. Comment on your plot.
+
+```{r}
 
 ```
+
+
+> Accelerometer data allows the inspection activity over the course of the day. Make a three-panel plot that shows the 24-hour activity time courses for each education level and use color to indicate sex. Describe in words any patterns or conclusions you can make based on this graph; including smooth trends may help identify differences.
+
+```{r}
+
+```
+
+
