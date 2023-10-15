@@ -234,13 +234,15 @@ gender_tbl = gender_df |>
   knitr::kable(digits = 4)
 
 
-gender_plot = ggplot(gender_df, aes(x = education, y = n_obs)) +
+ggplot(gender_df, aes(x = education, y = n_obs)) +
   geom_bar(stat = "identity", position = "dodge") + 
   labs(title = "Number of Participants by Education Level",
        x = "Education Level",
        y = "Number of Participants") +
-  facet_wrap(~sex, ncol = 2)
+  facet_wrap(~sex, ncol = 2) +
+   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
 * Based on the data, more females in the study completed more then high school compared to males.
 * However, more males completed the equivalent of high school compared to females.
 
@@ -248,7 +250,19 @@ gender_plot = ggplot(gender_df, aes(x = education, y = n_obs)) +
 > Traditional analyses of accelerometer data focus on the total activity over the day. Using your tidied dataset, aggregate across minutes to create a total activity variable for each participant. Plot these total activities (y-axis) against age (x-axis); your plot should compare men to women and have separate panels for each education level. Include a trend line or a smooth to illustrate differences. Comment on your plot.
 
 ```{r}
+tot_activity_df <- nhanes_merge_df |> 
+  group_by(seqn, sex, age, education) |> 
+  summarize(total_activity = sum(mims))
 
+ggplot(tot_activity_df, aes(x = age, y = total_activity, color = sex)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(se = FALSE) +   
+  facet_wrap(.~ education) + 
+  labs(
+    title = "Total Activity vs Age by Gender and Education Level",
+    x = "Age",
+    y = "Total Activity"
+  )
 ```
 
 
